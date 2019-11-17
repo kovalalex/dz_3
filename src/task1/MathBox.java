@@ -1,34 +1,35 @@
 package task1;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Класс MathBox
  * @author Александр Коваленко
  */
 public class MathBox {
-    private ArrayList<Number> list;
-    public MathBox(Number[] array) {
-        list = new ArrayList<>(Arrays.asList(array));
+
+    private HashSet<Number> set = new HashSet<>();
+
+    public MathBox(Number[] array) throws Exception {
+        set.addAll(Arrays.asList(array));
+       if (set.size()!=array.length ) throw new Exception("Массив параметр содержит значения-дубликаты!");
     }
 
     @Override
     public String toString() {
         return "MathBox{" +
-                "list=" + list +
+                "set=" + set +
                 '}';
     }
 
     /**
      * Метод summator
-     * @return long сумма всех number хранимых объектом
+     * @return double сумма всех number хранимых объектом
      */
-    public long summator(){
-        long summ = 0;
-        for (Number x: list) {
-            summ+=x.longValue();
+    public double summator(){
+        double summ = 0;
+        for (Number x: set) {
+            summ+=x.doubleValue();
         }
         return summ;
     }
@@ -38,9 +39,23 @@ public class MathBox {
      * @param split int
      */
     public void splitter(int split){
-        for (int i = 0; i < list.size(); i++) {
-            list.set(i, list.get(i).intValue()/split);
+        Iterator<Number> i = set.iterator();
+        ArrayList<Number> list = new ArrayList<>();
+        for (Number x: set)
+        {
+            if (x instanceof Integer)
+                list.add(x.intValue()/split);
+            else if (x instanceof Long)
+                list.add(x.longValue());
+            else if (x instanceof Float)
+                list.add(x.floatValue()/split);
+            else if (x instanceof Byte)
+                list.add(x.byteValue()/split);
+            else
+            list.add(x.doubleValue()/split);
         }
+        set.clear();
+        set.addAll(list);
     }
 
     @Override
@@ -48,17 +63,17 @@ public class MathBox {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MathBox mathBox = (MathBox) o;
-        return Objects.equals(list, mathBox.list);
+        return set.equals(mathBox.set);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(list);
+        return Objects.hash(set);
     }
 
     public void delete(Integer del){
-        if (list.contains(del));
-         list.remove(del);
+        if (set.contains(del));
+         set.remove(del);
 
     }
 }

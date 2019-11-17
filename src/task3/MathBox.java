@@ -1,8 +1,6 @@
 package task3;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Класс MathBox
@@ -10,19 +8,21 @@ import java.util.Objects;
  */
 public class MathBox extends ObjectBox<Number>{
 
-    public MathBox(Number[] array) {
-        super(array);
+    public MathBox(Number[] array) throws Exception {
+
+        super(new HashSet<Number>());
+        collection.addAll(Arrays.asList(array));
+        if (collection.size() != array.length) throw new Exception("Массив параметр содержит значения-дубликаты!");
     }
 
     /**
-     * Метод сумматор
-     * @return float сумма элементов list
+     * Метод summator
+     * @return double сумма всех number хранимых объектом
      */
-    public float summator(){
-        float summ = 0;
-        ArrayList<Number> list = super.getList();
-        for (Number x: list) {
-            summ+=x.longValue();
+    public double summator(){
+        double summ = 0;
+        for (Number x: collection) {
+            summ+=x.doubleValue();
         }
         return summ;
     }
@@ -32,23 +32,46 @@ public class MathBox extends ObjectBox<Number>{
      * в объекте элементов на делитель, являющийся аргументом метода
      * @param split int делитель
      */
+    /**
+     * Поочередное деление всех элементов на параметр-делитель
+     * @param split int
+     */
     public void splitter(int split){
-        ArrayList<Number> list = super.getList();
-        for (int i = 0; i < list.size(); i++) {
-            list.set(i, list.get(i).floatValue()/split);
+        Iterator<Number> i = collection.iterator();
+        ArrayList<Number> list = new ArrayList<>();
+        for (Number x: collection)
+        {
+            if (x instanceof Integer)
+                list.add(x.intValue()/split);
+            else if (x instanceof Long)
+                list.add(x.longValue());
+            else if (x instanceof Float)
+                list.add(x.floatValue()/split);
+            else if (x instanceof Byte)
+                list.add(x.byteValue()/split);
+            else
+                list.add(x.doubleValue()/split);
         }
-        super.setList(list);
+        collection.clear();
+        collection.addAll(list);
     }
 
     public void delete(Integer del){
-        if (super.getList().contains(del.floatValue()));
-        super.deleteObject(del.floatValue());
+        if (collection.contains(del));
+        collection.remove(del);
 
     }
 
     @Override
-    public String toString() {
-        return this.dump();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MathBox mathBox = (MathBox) o;
+        return collection.equals(mathBox.collection);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(collection);
+    }
 }

@@ -2,49 +2,49 @@ package task3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Класс ObjectBox
  * @author Александр Коваленко
  */
-public class ObjectBox<T> {
+public class ObjectBox<T>  {
     /**
-     * Array list для хранения объектов
+     * Коллекция элементов
      */
-    private ArrayList<T> list;
+    protected Collection<T> collection;
 
     public ObjectBox() {
-        list = new ArrayList<T>();
+        collection = new ArrayList<T>();
     }
-    public ObjectBox(T[] array) {
-        list = new ArrayList<T>(Arrays.asList(array));
+
+    public  ObjectBox(Collection<T> values){
+        collection = values;
     }
+
     public void addObject(T o){
-        list.add(o);
+        collection.add(o);
     }
     public void deleteObject (T o){
-        list.remove(o);
+        collection.remove(o);
     }
 
     /**
-     * Метод сериализации list
-     * @return String
+     * метод dump, выводит элементы коллекции в строку
      */
-    public String dump(){
+    public void dump(){
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            builder.append(list.get(i).toString());
-           if (i < list.size()-1)
-            builder.append("+");
+        Iterator<T> iter = collection.iterator();
+        while (iter.hasNext()){
+            builder.append(iter.next());
+            if (iter.hasNext()){
+                builder.append(", ");
+            }
         }
-        return builder.toString();
+
+        System.out.println(builder.toString());
     }
 
-    public ArrayList<T> getList() {
-        return list;
-    }
 
-    public void setList(ArrayList<T> list) {
-        this.list = list;
-    }
 }
